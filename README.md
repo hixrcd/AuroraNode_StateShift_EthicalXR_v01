@@ -91,3 +91,16 @@ Planned future expansions include:
 
 ## Author
 XR & AI Creative Developer focused on building systems where technology responds to human state, not the other way around.
+
+---
+
+## Open to Collaboration
+
+Currently exploring state-driven XR systems and human-centered interaction design.
+
+Interested in connecting with:
+- XR developers
+- Creative technologists
+- Studios exploring new interaction paradigms
+
+→ Open for LIA, collaborations, and experimental projects
