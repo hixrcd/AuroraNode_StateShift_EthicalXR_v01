@@ -1,5 +1,5 @@
 # AuroraNode_StateShift_EthicalXR_v01
-
+> XR systems that respond to human state — not compete for attention.
 Prototype exploring emotion-driven XR systems through real-time visual feedback.
 
 ![StateShift Orb](Assets/Screenshots/stateshift_orb_yellow.png)
