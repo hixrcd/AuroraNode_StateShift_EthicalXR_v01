@@ -1,0 +1,8 @@
+## Evolution
+
+This project originated from an earlier prototype exploring the same concept.
+
+The current version (v0.1) represents an evolved and refined system, with improved structure, clarity, and responsiveness.
+
+Early exploration materials can be found in:
+`Docs/Early_Prototype/`

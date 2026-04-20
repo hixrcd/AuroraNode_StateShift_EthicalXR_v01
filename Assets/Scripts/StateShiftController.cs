@@ -20,6 +20,7 @@ public class StateShiftController : MonoBehaviour
     private float pulseSpeed;
     private float pulseAmount;
     private Vector3 baseScale;
+    private float baseLightIntensity;
 
     void Start()
     {
@@ -42,6 +43,12 @@ public class StateShiftController : MonoBehaviour
         // PULSE ANIMATION
         float pulse = Mathf.Sin(Time.time * pulseSpeed) * pulseAmount;
         transform.localScale = baseScale + Vector3.one * pulse;
+
+        // LIGHT PULSE
+        if (orbLight != null)
+        {
+            orbLight.intensity = baseLightIntensity + pulse * 1f;
+        }
     }
 
     void SetState(State newState)
@@ -51,15 +58,15 @@ public class StateShiftController : MonoBehaviour
         switch (newState)
         {
             case State.Grounded:
-                ApplyState(Color.blue, 1f, 1f, 0.05f);
+                ApplyState(Color.blue, 1.2f, 0.35f, 0.06f);
                 break;
 
             case State.Focused:
-                ApplyState(Color.yellow, 2f, 2f, 0.1f);
+                ApplyState(Color.yellow, 2f, 0.5f, 0.08f);
                 break;
 
             case State.Overloaded:
-                ApplyState(Color.red, 4f, 5f, 0.2f);
+                ApplyState(Color.red, 3f, 1.6f, 0.16f);
                 break;
         }
     }
@@ -70,7 +77,10 @@ public class StateShiftController : MonoBehaviour
             orbRenderer.material.color = color;
 
         if (orbLight != null)
+        {
             orbLight.intensity = lightIntensity;
+            baseLightIntensity = lightIntensity;
+        }
 
         pulseSpeed = speed;
         pulseAmount = amount;

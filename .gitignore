@@ -6,6 +6,11 @@
 [Ll]ogs/
 UserSettings/
 
+# =========================
+# MemoryCaptures
+# =========================
+MemoryCaptures/
+
 *.csproj
 *.unityproj
 *.sln
