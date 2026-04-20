@@ -1,6 +1,8 @@
 # AuroraNode_StateShift_EthicalXR_v01
 
 > What if XR adapted to you — instead of demanding your attention?
+Built as part of an exploration into ethical, state-driven interaction design —  
+where technology supports human awareness instead of competing for it.
 
 Prototype exploring emotion-driven XR systems through real-time visual feedback.
 
