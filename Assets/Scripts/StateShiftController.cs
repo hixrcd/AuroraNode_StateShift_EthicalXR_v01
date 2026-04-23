@@ -1,10 +1,12 @@
 using UnityEngine;
+using TMPro;
 
 public class StateShiftController : MonoBehaviour
 {
     // === REFERENCES ===
     public Renderer orbRenderer;
     public Light orbLight;
+    public TextMeshProUGUI stateLabel;
 
     // === STATES ===
     public enum State
@@ -21,10 +23,19 @@ public class StateShiftController : MonoBehaviour
     private float pulseAmount;
     private Vector3 baseScale;
     private float baseLightIntensity;
+    public float groundedPulseSpeed = 0.6f;
+    public float focusedPulseSpeed = 1.2f;
+    public float overloadedPulseSpeed = 2.8f;
 
     void Start()
     {
         baseScale = transform.localScale;
+
+        if (orbLight != null)
+        {
+            baseLightIntensity = orbLight.intensity;
+        }
+
         SetState(State.Grounded);
     }
 
@@ -47,26 +58,38 @@ public class StateShiftController : MonoBehaviour
         // LIGHT PULSE
         if (orbLight != null)
         {
-            orbLight.intensity = baseLightIntensity + pulse * 1f;
+            orbLight.intensity = baseLightIntensity + Mathf.Abs(pulse) * 1f;
+        }
+        // EMISSION PULSE
+        if (orbRenderer != null)
+        {
+            Color emissionColor = orbRenderer.material.color * (baseLightIntensity + Mathf.Abs(pulse));
+            orbRenderer.material.SetColor("_EmissionColor", emissionColor);
         }
     }
 
     void SetState(State newState)
     {
         currentState = newState;
-
+        if (stateLabel != null)
+        {
+            stateLabel.text = newState.ToString();
+        }
         switch (newState)
         {
             case State.Grounded:
+                pulseSpeed = groundedPulseSpeed;
                 ApplyState(Color.blue, 1.2f, 0.35f, 0.06f);
                 break;
 
             case State.Focused:
-                ApplyState(Color.yellow, 2f, 0.5f, 0.08f);
+                pulseSpeed = focusedPulseSpeed;
+                ApplyState(Color.green, 1.8f, 0.55f, 0.10f);
                 break;
 
             case State.Overloaded:
-                ApplyState(Color.red, 3f, 1.6f, 0.16f);
+                pulseSpeed = overloadedPulseSpeed;
+                ApplyState(Color.red, 2.5f, 0.9f, 0.16f);
                 break;
         }
     }
@@ -74,8 +97,11 @@ public class StateShiftController : MonoBehaviour
     void ApplyState(Color color, float lightIntensity, float speed, float amount)
     {
         if (orbRenderer != null)
+        {
             orbRenderer.material.color = color;
-
+            orbRenderer.material.EnableKeyword("_EMISSION");
+            orbRenderer.material.SetColor("_EmissionColor", color * lightIntensity);
+        }
         if (orbLight != null)
         {
             orbLight.intensity = lightIntensity;
