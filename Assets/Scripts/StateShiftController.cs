@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class StateShiftController : MonoBehaviour
@@ -26,6 +26,11 @@ public class StateShiftController : MonoBehaviour
     public float groundedPulseSpeed = 0.6f;
     public float focusedPulseSpeed = 1.2f;
     public float overloadedPulseSpeed = 2.8f;
+    private Color currentColor;
+    private Color targetColor;
+
+    private float currentIntensity;
+    private float targetIntensity;
 
     void Start()
     {
@@ -35,6 +40,13 @@ public class StateShiftController : MonoBehaviour
         {
             baseLightIntensity = orbLight.intensity;
         }
+
+        // 👇 LÄGG HIT
+        currentColor = orbRenderer.material.color;
+        targetColor = currentColor;
+
+        currentIntensity = baseLightIntensity;
+        targetIntensity = baseLightIntensity;
 
         SetState(State.Grounded);
     }
@@ -55,15 +67,20 @@ public class StateShiftController : MonoBehaviour
         float pulse = Mathf.Sin(Time.time * pulseSpeed) * pulseAmount;
         transform.localScale = baseScale + Vector3.one * pulse;
 
-        // LIGHT PULSE
+        // SMOOTH COLOR
+        currentColor = Color.Lerp(currentColor, targetColor, Time.deltaTime * 5f);
+        orbRenderer.material.color = currentColor;
+
+        // SMOOTH LIGHT
         if (orbLight != null)
         {
-            orbLight.intensity = baseLightIntensity + Mathf.Abs(pulse) * 1f;
+            currentIntensity = Mathf.Lerp(currentIntensity, targetIntensity, Time.deltaTime * 5f);
+            orbLight.intensity = currentIntensity + Mathf.Abs(pulse);
         }
         // EMISSION PULSE
         if (orbRenderer != null)
         {
-            Color emissionColor = orbRenderer.material.color * (baseLightIntensity + Mathf.Abs(pulse));
+            Color emissionColor = currentColor * (currentIntensity + Mathf.Abs(pulse));
             orbRenderer.material.SetColor("_EmissionColor", emissionColor);
         }
     }
@@ -96,17 +113,8 @@ public class StateShiftController : MonoBehaviour
 
     void ApplyState(Color color, float lightIntensity, float speed, float amount)
     {
-        if (orbRenderer != null)
-        {
-            orbRenderer.material.color = color;
-            orbRenderer.material.EnableKeyword("_EMISSION");
-            orbRenderer.material.SetColor("_EmissionColor", color * lightIntensity);
-        }
-        if (orbLight != null)
-        {
-            orbLight.intensity = lightIntensity;
-            baseLightIntensity = lightIntensity;
-        }
+        targetColor = color;
+        targetIntensity = lightIntensity;
 
         pulseSpeed = speed;
         pulseAmount = amount;
